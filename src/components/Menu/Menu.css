@@ -1,0 +1,7 @@
+.Menu {}
+
+
+.navbar-item, a:hover{
+    color: orangered!important;
+    font-size: 20px;
+}

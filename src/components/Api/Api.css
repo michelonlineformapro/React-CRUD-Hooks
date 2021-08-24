@@ -1,0 +1,38 @@
+.Api {}
+
+#api-content{
+    margin-top: 20px;
+
+}
+.card{
+    padding: 20px;
+    margin-top: 10px;
+    background-color: white;
+    height: 100%;
+}
+#api-card{
+
+}
+
+#add-livre-form{
+    padding: 20px;
+    margin-top: 10px;
+    background-color: white;
+    height: 100%;
+    color: #485fc7;
+    display: none;
+}
+label{
+    color: #485fc7!important;
+}
+
+.livre-description{
+    color: #485fc7;
+}
+
+/*Update form*/
+#update-livre-form{
+    background-color: orange;
+    padding:20px;
+}
+

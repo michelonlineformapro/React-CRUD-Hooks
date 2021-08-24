@@ -1,0 +1,30 @@
+.Taches {}
+.TachesListe{}
+
+#taches-content{
+    margin-top: 20px;
+    padding: 20px;
+    background-color: white;
+}
+
+#input-taches{
+
+}
+
+#btn-add-taches{
+    margin-top: 20px;
+}
+
+.tache-item{
+    padding: 20px;
+    color: orange;
+    font-size: 24px;
+}
+
+.tache-item:hover{
+    background-color: darkslategray;
+    color: orangered;
+    font-weight: bold;
+    font-size: 24px;
+    cursor: pointer;
+}

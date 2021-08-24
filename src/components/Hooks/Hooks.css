@@ -1,0 +1,22 @@
+.Hooks {}
+
+#hooks-content{
+    margin-top: 10px;
+    background-color: white;
+    padding: 10px;
+}
+
+#full-produit-container{
+    width: 100%;
+    display: flex;
+
+}
+
+#panier{
+    width: 30%;
+}
+
+
+#produits{
+    width: 70%;
+}

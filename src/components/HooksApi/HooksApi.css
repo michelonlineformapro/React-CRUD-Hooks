@@ -1,0 +1,17 @@
+.HooksApi {}
+
+#hooks-api-content{
+    margin-top: 10px;
+    background-color: white;
+    padding: 10px;
+}
+
+#ajouter-livre-form{
+    margin-top: 10px;
+    background-color: white;
+    padding: 10px;
+}
+
+#edit-form-livre{
+    display: none;
+}
