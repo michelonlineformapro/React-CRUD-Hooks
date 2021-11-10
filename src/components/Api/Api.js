@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import axios from "axios";
 import './Api.css';
 import $ from 'jquery';
+import TestComposnat from "./TestComposnat";
 
 //Base du CRUD = https://www.digitalocean.com/community/tutorials/react-axios-react-fr
 
@@ -18,11 +19,18 @@ export default class Api extends Component {
             nomLivre: "",
             descriptionLivre: "",
             prixLivre: "",
-            imageLivre: ""
+            imageLivre: "",
+            categories:[],
+            oneCategorie: "",
+            isChecked: false,
+            currentCategorie:"",
+            rechercher:""
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.deleteLivre = this.deleteLivre.bind(this);
+        this.getCategories = this.getCategories.bind(this);
+        this.handleCheckBoxChange = this.handleCheckBoxChange.bind(this);
     }
 
     //componentDidMount() est appelée immédiatement après que le composant est monté
@@ -49,8 +57,9 @@ export default class Api extends Component {
                     livres
                 })
             })
-    }
 
+        this.getCategories()
+    }
 
     //Changement d'etat et recup des valeurs des inputs pour ajouter un livre
     handleChange(event) {
@@ -60,7 +69,26 @@ export default class Api extends Component {
         })
     }
 
+    //Changement d'état des checkbox
+    handleCheckBoxChange = (event) => {
+        const currentCategorie = event.target.value;
+        this.setState({
+            currentCategorie
+        });
 
+
+        //Retourne le categorieLivre de la collection livres
+        console.log(currentCategorie)
+
+    }
+
+    //Recup des valeur de input de la barre de recherche
+    handleRechercher = (event) => {
+        console.log("Les changement", event.target.value)
+        this.setState({
+            rechercher: event.target.value
+        })
+    }
     //Validation du formulaire et sauvegarde des elements
     async handleSubmit(event) {
         event.preventDefault();
@@ -82,7 +110,6 @@ export default class Api extends Component {
                 console.log("Erreur lors de l'ajout du livre : " + err)
             })
     }
-
     async handleUpdateSubmit(id, event){
         event.preventDefault()
 
@@ -103,8 +130,6 @@ export default class Api extends Component {
                 console.log("Erreur de mise a jour : " + err)
             })
     }
-
-
     //Supprimer un produit
     async deleteLivre(id) {
 
@@ -118,6 +143,22 @@ export default class Api extends Component {
             })
             .catch(err => {
                 console.log("Erreur 404 = " + err)
+            })
+    }
+
+    //Les catégories a lister dans les checkboxs
+    getCategories = () => {
+        //Ici soit fetch js es6 ou axios.get
+        axios.get("http://localhost:3001/categories")
+            //Promesse
+            .then(response => {
+                const categories = response.data;
+                this.setState({
+                    categories
+                })
+            })
+            .catch(err => {
+                console.log(err)
             })
     }
 
@@ -186,37 +227,86 @@ export default class Api extends Component {
                 </div>
 
                 <div className="container is-fluid is-desktop">
-                    <div id="api-content" className="is-horizontal is-multiline columns">
-                        {/* Boucle autour des carte avec map */}
-                        {this.state.livres.map(livre =>
-                            <div className="column is-2" key={livre.id}>
-                                <div className="card">
-                                    <div className="card-image">
-                                        <h3 className="title is-2 has-text-centered has-text-info">{livre.nomLivre}</h3>
-                                        <figure className="image">
-                                            <img id="api-card" src={livre.imageLivre} alt={livre.nomLivre}
-                                                 title={livre.nomLivre}/>
-                                        </figure>
-                                    </div>
-                                    <div className="card-content">
-                                        <div className="content">
-                                            <p className="has-text-danger">DESCRIPTION :</p>
-                                            <p className="livre-description">{livre.descriptionLivre}</p>
-                                            <p className="has-text-danger">PRIX :</p>
-                                            <p className="title is-3 has-text-success">{livre.prixLivre} €</p>
-                                        </div>
-                                        <div className="card-content has-text-centered">
-                                            <button name="id" id="id" onClick={(event) => this.deleteLivre(livre.id, event)} type={"submit"} className="button is-danger">Supprimer</button>
-                                            <br /><br />
-                                            <button id="show-hide-edit-form" type={"submit"} className="button is-dark">Editer</button>
-                                            <a href="#update-livre-form" className="button is-success">Mettre a jour</a>
-                                        </div>
 
-                                    </div>
-                                </div>
-                            </div>
-                        )}
+
+                    {/*Creation du formulaire de recherche*/}
+                    <div className="mt-3 field box">
+                        <label className="label">Rechecher</label>
+                        <input
+                            className="input"
+                            placeholder="php"
+                            type="text"
+                            onChange={this.handleRechercher}
+                            value={this.rechercher}
+                            name="recherche"
+                        />
                     </div>
+
+                    <div className="columns">
+                        <div id="left-aside" className="column is-2">
+                            {this.state.categories.map(categorie =>
+                            <div key={categorie.id} className="field">
+                                <label className="ml-3 title is-5 has-text-warning checkbox">
+                                    <input
+                                        className="checkbox"
+                                        type="checkbox"
+                                        value={categorie.nom}
+                                        onChange={this.handleCheckBoxChange}
+                                    />
+                                    {categorie.nom}
+                                </label>
+                            </div>
+                            )}
+                        </div>
+
+                        <div className="column is-10">
+                            <TestComposnat nom="bob" email="test@test.com"/>
+                            <div id="api-content" className="is-horizontal is-multiline columns">
+
+                                {/*test de filtre avec les checkbox*/}
+                                {this.state.livres.filter(categorie => categorie.categoriesLivre.includes(this.state.nomLivre)).map(cat =>
+                                    <div key={cat.id} className="box">
+                                        {cat.nomLivre}
+                                        <p className="has-text-danger">{cat.categoriesLivre}</p>
+                                        <p>{this.state.currentCategorie}</p>
+                                    </div>
+                                )}
+
+                                {/* Boucle autour des carte avec map
+                                {this.state.livres.filter(recherche => recherche.nomLivre.toLowerCase().includes(this.state.rechercher.toLowerCase())).map(livre =>
+                                    <div className="column is-2" key={livre.id}>
+                                        <div className="card">
+                                            <div className="card-image">
+                                                <h3 className="title is-2 has-text-centered has-text-info">{livre.nomLivre}</h3>
+                                                <figure className="image">
+                                                    <img id="api-card" src={livre.imageLivre} alt={livre.nomLivre}
+                                                         title={livre.nomLivre}/>
+                                                </figure>
+                                            </div>
+                                            <div className="card-content">
+                                                <div className="content">
+                                                    <p className="has-text-danger">DESCRIPTION :</p>
+                                                    <p className="livre-description">{livre.descriptionLivre}</p>
+                                                    <p className="has-text-danger">PRIX :</p>
+                                                    <p className="title is-3 has-text-success">{livre.prixLivre} €</p>
+                                                    <p className="title is-6 has-text-info">CATEGORIES : {livre.categoriesLivre}</p>
+                                                </div>
+                                                <div className="card-content has-text-centered">
+                                                    <button name="id" id="id" onClick={(event) => this.deleteLivre(livre.id, event)} type={"submit"} className="button is-danger">Supprimer</button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                                */}
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
                     <br />
                 </div>
 
@@ -227,7 +317,6 @@ export default class Api extends Component {
                         <div className="field">
                             <label className="label">Nom du livre</label>
                             <input
-                                id="nomLivre"
                                 name="nomLivre"
                                 className="input"
                                 type="text"
@@ -241,7 +330,6 @@ export default class Api extends Component {
                         <div className="field">
                             <label className="label">Description du livre</label>
                             <textarea
-                                id="descriptionLivre"
                                 name="descriptionLivre"
                                 className="textarea"
                                 required
@@ -253,7 +341,6 @@ export default class Api extends Component {
                         <div className="field">
                             <label className="label">Prix du livre</label>
                             <input
-                                id="prixLivre"
                                 name="prixLivre"
                                 className="input"
                                 type="number"
@@ -267,7 +354,6 @@ export default class Api extends Component {
                         <div className="field">
                             <label className="label">Image du livre</label>
                             <input
-                                id="imageLivre"
                                 name="imageLivre"
                                 className="input"
                                 type="text"

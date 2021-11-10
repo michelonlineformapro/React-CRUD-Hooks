@@ -36,3 +36,12 @@ label{
     padding:20px;
 }
 
+/*Left aside categorie*/
+#left-aside{
+    margin-top: 55px;
+    background-color: cadetblue;
+    color: white;
+    height: 100vh;
+
+}
+

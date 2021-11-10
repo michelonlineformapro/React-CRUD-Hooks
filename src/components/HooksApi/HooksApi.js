@@ -5,8 +5,6 @@ import axios from "axios";
 import $ from "jquery";
 
 
-
-
 function HooksApi() {
 
     //Pour update livre
